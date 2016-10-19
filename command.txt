@@ -131,6 +131,87 @@ git remote rm myremote
 
 就可以把 myremote 这个远程仓库从列表中清除了。
 
-9.
+9.抓取/推送数据
+当添加了远程仓库之后，肯定不能只在列表中看到个名字就完事了。我们要通过远程仓库来存放数据。
 
+抓取数据的命令是：
+
+git fetch [remote-name]
+
+比如对于我们上次添加的 myremote 远程仓库，就是：
+
+git fetch myremote
+
+不过执行完此命令，你仍然看不到工作目录下的文件有任何变化。这是因为 git fetch 只是把远程的数据抓取到本地，而不会把改动合并到当前的分支上。
+
+如果你是直接从远程仓库 clone 了本地的仓库，那么你可以直接执行命令：
+
+git pull
+
+这样会把远程仓库抓取到本地，再将远端的 master 分支合并到本地的 master 分支上。所以当你之前 clone 下了代码，而其他开发者又更新了远端的代码后，可以通过 git pull 将本地更新到最新的版本。
+
+有关于分支的具体细节，留待后续课程中细说。
+
+
+当你在本地做了改动，并且 commit 了你的改动之后，需要将本地的数据更新到远程仓库中时，就需要用到命令：
+
+git push [remote-name] [branch-name]
+
+假设是要推送到默认的 origin 仓库中的 master 分支，那就运行：
+
+git push origin master
+
+注意，这要求你有对远程服务器上的写权限。另外，如果别人在你之前对远程仓库中提交了新的更新，你的推送就会被驳回。这时你需要先抓取他们的更新，合并到本地，再重新推送。
+
+10.关于Git
+git log -p FILE
+
+查看README.md的修改历史，例如：
+> git log -p README.md
+
+git log -S’PATTERN’
+
+例如，搜索修改符合stupid的历史：
+> git log -S'stupid'
+
+git add -p
+
+交互式的保存和取消保存变化，使用：
+> git add -p
+
+git rm –cached FILE
+
+这个命令只删除远程文件，例如：
+> git rm --cached database.yml
+删除database.yml被保存的记录，但是不影响本地文件。这对删除已经推送过的忽略文件记录而且不影响本地文件是非常的方便的。
+
+git log ..BRANCH
+
+这个命令返回某个非HEAD分支的提交记录。假如你在一个功能分支，输入：
+> git log ..master
+返回全部master分支的历史记录，包括未被合并到当前分支的提交记录。
+
+git branch –merged & git branch –no-merged
+
+这个命令返回已合并分支列表或未合并的分支列表。这个命令对合并前检查非常有用。例如，在一个功能分支，输入
+> git branch --no-merged
+返回未合并到该分支的分支列表。
+
+git branch –contains SHA
+
+返回包含某个指定sha的分支列表。例如：
+> git branch --contains 2f8e2b
+显示全部包含提交2f832b的分支。这个命令对于验证git cherry-pick完成非常有帮助。
+
+git status -s
+
+返回一个简单版的git status。我设置这个命令为默认git status来减少噪音。
+
+git reflog
+
+显示你在本地已完成的操作列表。
+
+git shortlog -sn
+
+显示提交记录的参与者列表。和GitHub的参与者列表相同。
 
