@@ -25,6 +25,112 @@ git commit --amend
 
 还有另一种情况，就是整个上一次的提交你都不想要了，希望回退到上一个提交状态。这时候就需要用到版本回退了。
 
+7.版本回退
+我们先在工作目录中运行 git log 命令，看看到目前为止的提交记录：
 
- 
+commit 81e34d1d269b13bb23619d828495119492eabc5a
+Author: Crossin 
+Date:   Thu Nov 28 17:27:34 2013 +0800
+
+    remove file
+
+commit 1edcbf15f45359768b3fa9cd99ddddde792912fe
+Author: Crossin 
+Date:   Thu Nov 28 15:16:37 2013 +0800
+
+    add file to be deleted
+
+commit 15547cb5e6bb661a4b9934c1ea55fe0aeceb0682
+Author: Crossin 
+Date:   Tue Nov 26 14:39:06 2013 +0800
+
+    test file status
+
+commit c1310cffd37c4b7fe765986035e54a3c27c2887f
+Author: Crossin 
+Date:   Tue Nov 26 14:11:46 2013 +0800
+
+    init readme
+
+也许你的提交历史和我不一样，这没关系。
+
+还记得我们前面课里说过的 HEAD，它指向的是最新的提交。而上一次的提交就是 HEAD^，上上次是 HEAD^^，也可以写成 HEAD~2，以此类推。之前30次版本就是 HEAD~30，或者你愿意也可以打30个^。
+
+要回退上一个版本，只要：
+
+git reset --hard HEAD^
+
+--hard 表示放弃所有的本地改动，其他的可选模式我们先不管。
+
+输出提示：
+HEAD is now at 1edcbf1 add file to be deleted
+
+HEAD 已经被移动回“add file to be deleted”这个版本。
+
+如果想要移动到某个指定的提交，也可以直接使用提交id，就是 git log 里，commit 后面的一串字符（你的版本中的提交 id 和我是不一样的）。
+
+git reset --hard 15547
+
+id 不用输全，前几位就够，git 会自动去找匹配的提交。然后就可以看到：
+
+HEAD is now at 15547cb test file status
+
+
+顺便说一下，你可以使用 git 里自带的图形化客户端 gitk 来查看和管理版本变动。在命令行里输入 gitk，mac 上是 gitx，就可以打开（如果不幸没有打开，可能你需要另行安装以下）。
+
+回退前：
+
+回退后：
+
+注意，当用 git reset --hard 回退版本后，所有的本地未提交改动将被舍弃，而被回退掉的版本也不再出现在记录里（虽然还是可以被找回来）。所以在使用此操作时请慎重考虑。
+
+8.远程仓库
+
+通过 git remote 命令可以查看当期有哪些远程仓库。
+
+还记得我最开始安装成功后从 GitHub 上 clone 下的那个项目吗？在它的工作目录中输入：
+
+git remote
+
+你会看到显示：
+
+origin
+
+这就是这个项目的远程仓库。
+
+加上 -v 可以看到更详细的信息：
+
+origin	git@github.com:crossin/CrossinClass.git (fetch)
+origin	git@github.com:crossin/CrossinClass.git (push)
+
+克隆的源地址也被显示出来。
+
+当你是从远程仓库 clone 一个仓库到本地时，会自动将此地址加到你的远程仓库列表中，并命名为 origin。
+
+而如果是一个在本地 git init 创建的仓库，刚开始时 git remote 是看不到任何信息的，因为它没有添加任何远程仓库。
+
+想要添加一个远程仓库，可以用命令：
+
+git remote add [shortname] [url]
+
+比如：
+
+git remote add myremote git@github.com:crossin/CrossinClass.git
+
+这样，在这个项目中就能 myremote 这个名字来引用添加的远程仓库。
+
+运行一下 git remote，看看是不是已经出现在了列表中。
+
+但此时此刻，你的工作目录下的文件并没有发生任何变化。只是相当于，你拿到了一个箱子的钥匙，而箱子里的东西还原封未动。对于远程仓库的操作，后面还有很多等待我们去折腾的。
+
+现在可以去 GitHub 注册个号，然后建一个自己的项目，clone 到本地。因为别人的项目是没有权限进行写操作的。接下来我们很快就会用到它。
+
+假如你要删除某个仓库，就使用 git remote rm 命令：
+
+git remote rm myremote
+
+就可以把 myremote 这个远程仓库从列表中清除了。
+
+9.
+
 
